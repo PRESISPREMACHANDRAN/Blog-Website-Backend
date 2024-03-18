@@ -25,11 +25,23 @@ mongoose.connect(process.env.mongoDBURL);
 //Route for register  (Sign Up)
 app.post("/register",async(req,res)=>{
   var data=req.body
+
+let user = await userModel.findOne({
+    email: data.email,
+  });
+  if (!user) {
+
   var hashedPassword = await hashPassword(data.password);
-  data.password=hashedPassword
+  data.password = hashedPassword;
   let register = new userModel(data);
-  let result=await register.save()
-res.json({"status":"success","data":result})
+  let result = await register.save();
+  res.json({ status: "success", data: result });
+
+  } else {
+    res.json({status:"email id already exist"})
+  }
+
+
 })
 
 //Route for login
@@ -46,7 +58,7 @@ app.post("/login",async(req,res)=>{
     if (!isMatch) {
       res.json({ status: "invalid password" });
     } else {
-      res.json({ status: "success" });
+      res.json({ status: "success" ,userID:user._id});
     }
   }
 

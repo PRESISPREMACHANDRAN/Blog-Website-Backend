@@ -22,6 +22,7 @@ hashPassword = async (password) => {
 //connect to mongoDB
 mongoose.connect(process.env.mongoDBURL);
 
+
 //Route for register  (Sign Up)
 app.post("/register",async(req,res)=>{
   var data=req.body
@@ -58,7 +59,7 @@ app.post("/login",async(req,res)=>{
     if (!isMatch) {
       res.json({ status: "invalid password" });
     } else {
-      res.json({ status: "success" ,userID:user._id});
+      res.json({ status: "success", userID: user._id, name: user.FirstName});
     }
   }
 
